@@ -1,0 +1,128 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stock Profit/Loss Calculator with What-If Function</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            padding: 20px;
+        }
+        .container {
+            max-width: 400px;
+            margin: 0 auto;
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        input[type="number"], input[type="range"] {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 4px;
+            border: 1px solid #ddd;
+        }
+        button {
+            background-color: #007bff;
+            color: white;
+            padding: 10px;
+            width: 100%;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        .result, .what-if-result {
+            margin-top: 20px;
+            font-size: 1.2em;
+        }
+        label {
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>Stock Profit/Loss Calculator with What-If</h2>
+
+    <label for="buyPrice">Buy Price per Share (₹):</label>
+    <input type="number" id="buyPrice" placeholder="Enter the buy price" value="100">
+
+    <label for="quantity">Number of Shares:</label>
+    <input type="number" id="quantity" placeholder="Enter the number of shares" value="10">
+
+    <label for="sellPrice">What-If: Sell Price per Share (₹):</label>
+    <input type="range" id="sellPrice" min="100" max="20000" value="120" oninput="updateSellPriceValue(this.value)">
+    <span id="sellPriceValue">₹120</span>
+
+    <button onclick="calculateProfitLoss()">Calculate Profit/Loss</button>
+
+    <div class="result" id="result"></div>
+
+    <div class="what-if-result" id="whatIfResult"></div>
+</div>
+
+<script>
+    // Update the sell price value displayed next to the slider
+    function updateSellPriceValue(value) {
+        document.getElementById("sellPriceValue").textContent = '₹' + value;
+        calculateWhatIfProfitLoss(value);
+    }
+
+    // Calculate Profit/Loss for the given input
+    function calculateProfitLoss() {
+        let buyPrice = parseFloat(document.getElementById("buyPrice").value);
+        let sellPrice = parseFloat(document.getElementById("sellPrice").value);
+        let quantity = parseInt(document.getElementById("quantity").value);
+
+        if (isNaN(buyPrice) || isNaN(sellPrice) || isNaN(quantity)) {
+            document.getElementById("result").innerHTML = "Please enter valid inputs.";
+            return;
+        }
+
+        let totalBuy = buyPrice * quantity;
+        let totalSell = sellPrice * quantity;
+        let profitLoss = totalSell - totalBuy;
+        let percentage = (profitLoss / totalBuy) * 100;
+
+        if (profitLoss > 0) {
+            document.getElementById("result").innerHTML = `Profit: ₹${profitLoss.toFixed(2)} (${percentage.toFixed(2)}%)`;
+        } else if (profitLoss < 0) {
+            document.getElementById("result").innerHTML = `Loss: ₹${Math.abs(profitLoss).toFixed(2)} (${Math.abs(percentage).toFixed(2)}%)`;
+        } else {
+            document.getElementById("result").innerHTML = "No Profit, No Loss.";
+        }
+    }
+
+    // Calculate "What-If" Profit/Loss based on changing sell price using slider
+    function calculateWhatIfProfitLoss(sellPrice) {
+        let buyPrice = parseFloat(document.getElementById("buyPrice").value);
+        let quantity = parseInt(document.getElementById("quantity").value);
+
+        if (isNaN(buyPrice) || isNaN(sellPrice) || isNaN(quantity)) {
+            document.getElementById("whatIfResult").innerHTML = "Please enter valid inputs.";
+            return;
+        }
+
+        let totalBuy = buyPrice * quantity;
+        let totalSell = sellPrice * quantity;
+        let profitLoss = totalSell - totalBuy;
+        let percentage = (profitLoss / totalBuy) * 100;
+
+        if (profitLoss > 0) {
+            document.getElementById("whatIfResult").innerHTML = `What-If Profit: ₹${profitLoss.toFixed(2)} (${percentage.toFixed(2)}%) for Sell Price ₹${sellPrice}`;
+        } else if (profitLoss < 0) {
+            document.getElementById("whatIfResult").innerHTML = `What-If Loss: ₹${Math.abs(profitLoss).toFixed(2)} (${Math.abs(percentage).toFixed(2)}%) for Sell Price ₹${sellPrice}`;
+        } else {
+            document.getElementById("whatIfResult").innerHTML = `What-If: No Profit, No Loss for Sell Price ₹${sellPrice}`;
+        }
+    }
+</script>
+
+</body>
+</html>
