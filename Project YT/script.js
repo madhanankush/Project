@@ -1,5 +1,7 @@
-const apiKey = 'AIzaSyB0mYEKQHsDkXVwjMO-MgNwckjCS7FSzuM'; // Replace with your actual YouTube API key
-const channelIds = ['UC_x5XG1OV2P6uZZ5FSM9Ttw', 'UCudBLOKCEIGssdA8pQgIbvA']; // Replace with your subscription channels
+const apiKey = 'AIzaSyB0mYEKQHsDkXVwjMO-MgNwckjCS7FSzuM'; // Replace with your YouTube API key
+const sheetsApiKey = 'AIzaSyBQtzB-DNGMSs1RcfuWthr58samKJpcNGM'; // Replace with your Google Sheets API key
+const spreadsheetId = '1Io_eTz-x70eGFpXenFJAxKFS2_zRo46xe48Gi2Y9CjQ'; // Replace with your spreadsheet ID
+const sheetName = 'Sheet2'; // Name of the sheet containing channel IDs
 const videoGrid = document.getElementById('video-grid');
 
 // Load the Iframe Player API code asynchronously
@@ -12,15 +14,37 @@ let players = {}; // Store the YouTube players
 
 // Initialize YouTube players after API is ready
 function onYouTubeIframeAPIReady() {
-    channelIds.forEach(channelId => fetchVideos(channelId));
+    fetchChannelIds().then(channelIds => {
+        channelIds.forEach(channelId => fetchVideos(channelId));
+    });
 }
 
+// Function to fetch channel IDs from Google Sheet
+async function fetchChannelIds() {
+    const url = `https://sheets.googleapis.com/v4/spreadsheets/${spreadsheetId}/values/${sheetName}!A:A?key=${sheetsApiKey}`;
+    const response = await fetch(url);
+    const data = await response.json();
+    
+    console.log(data); // Log the response to check if the data is fetched
+
+    if (data.values) {
+        const channelIds = data.values.flat();  // Flatten array to get channel IDs
+        return channelIds;
+    } else {
+        console.error('Error fetching channel IDs from the sheet:', data.error);
+        return [];
+    }
+}
+
+
+// Fetch videos from YouTube API
 async function fetchVideos(channelId) {
     const response = await fetch(`https://www.googleapis.com/youtube/v3/search?part=snippet&channelId=${channelId}&maxResults=5&order=date&type=video&key=${apiKey}`);
     const data = await response.json();
     displayVideos(data.items);
 }
 
+// Display videos in the grid
 function displayVideos(videos) {
     videos.forEach(video => {
         const videoContainer = document.createElement('div');
