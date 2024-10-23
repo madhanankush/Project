@@ -1,3 +1,4 @@
+/* Basic reset */
 * {
     margin: 0;
     padding: 0;
@@ -6,6 +7,8 @@
 
 body {
     font-family: Arial, sans-serif;
+    background-color: #f9f9f9;
+    color: #333;
 }
 
 header {
@@ -13,6 +16,7 @@ header {
     background-color: #ff0000;
     color: white;
     padding: 1rem 0;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
 }
 
 #video-grid {
@@ -20,16 +24,21 @@ header {
     flex-wrap: wrap;
     justify-content: center;
     padding: 10px;
+    gap: 10px;
 }
 
 .video-container {
     width: 100%;
     max-width: 320px;
-    margin: 10px;
-    background-color: #f0f0f0;
-    border-radius: 5px;
+    background-color: #fff;
+    border-radius: 8px;
     overflow: hidden;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s;
+}
+
+.video-container:hover {
+    transform: scale(1.02);
 }
 
 iframe {
@@ -41,6 +50,7 @@ iframe {
 .controls {
     text-align: center;
     padding: 10px;
+    background-color: #f0f0f0;
 }
 
 button {
@@ -50,10 +60,25 @@ button {
     padding: 10px 20px;
     border-radius: 5px;
     cursor: pointer;
+    transition: background-color 0.3s;
 }
 
 button:hover {
     background-color: #d00000;
+}
+
+.load-more-btn {
+    background-color: #333;
+    color: white;
+    padding: 10px 20px;
+    margin: 20px 0;
+    cursor: pointer;
+    border: none;
+    border-radius: 5px;
+}
+
+.load-more-btn:hover {
+    background-color: #555;
 }
 
 @media (max-width: 320px) {
